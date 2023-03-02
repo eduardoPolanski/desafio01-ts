@@ -1,7 +1,7 @@
 export abstract class DioAccount {
-  private name: string
+  private readonly name: string
   private readonly accountNumber: number
-  balance: number = 0
+  private balance: number = 0
   private status: boolean = true
 
   constructor(name: string, accountNumber: number){
@@ -9,34 +9,54 @@ export abstract class DioAccount {
     this.accountNumber = accountNumber
   }
 
-  setName = (name: string): void => {
-    this.name = name
-    console.log('Nome alterado com sucesso!')
-  }
-
   getName = (): string => {
     return this.name
   }
 
-  deposit = (): void => {
+  getAccountNumber = (): number => {
+    return this.accountNumber
+  }
+
+  getStatus = (): void => {
+    console.log(`Conta ativa: ${this.status}`)
+  }
+
+  setStatus = (touf: boolean): void => {
+    if (touf === false) {
+      if (this.balance > 0) {
+        throw new Error('Saque o dinheiro da conta para pode desativa');
+      }
+    }
+    this.status = touf
+  }
+
+
+  deposit = (money: number) => {
     if(this.validateStatus()){
-      console.log('Voce depositou')
+      if (money < 0) {
+        throw new Error('Erro pois não é possivel deposito negativos!')
+      }
+      this.balance += money
     }
   }
 
-  withdraw = (): void => {
-    console.log('Voce sacou')
+  withdraw = (money: number) => {
+    if (this.validateStatus()) {
+      if (money > this.balance || money < 0) {
+        throw new Error('Não foi possivel efetua o saque')
+      }
+      this.balance -= money
+    }
   }
 
   getBalance = (): void => {
-    console.log(this.balance)
+    console.log(`Saldo: R$ ${this.balance}`)
   }
 
   private validateStatus = (): boolean => {
     if (this.status) {
       return this.status
     }
-
-    throw new Error('Conta inválida')
+    throw new Error('Conta desativada')
   }
 }
