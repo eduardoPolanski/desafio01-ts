@@ -28,7 +28,7 @@ export abstract class DioAccount {
       }
     }
     this.status = touf
-  }
+  } 
 
 
   deposit = (money: number) => {
